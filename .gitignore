@@ -1,0 +1,28 @@
+# Large model files and checkpoints
+pretrained_models/
+results-finetune/
+results/
+torch/
+
+# NFS junk files
+.nfs*
+
+# Python cache
+__pycache__/
+*.pyc
+diffusion/__pycache__/
+moe/__pycache__/
+
+# Logs (keep a few, not all)
+training_auto_resume_*.log
+watchdog.log
+watcher.log
+
+# Old backup
+finetune_moe_OLD_backup.py
+
+# Jupyter
+*.ipynb
+
+# Experiments scratch
+experiments/

@@ -368,3 +368,233 @@ DiT_models = {
     'DiT-B/2':  DiT_B_2,   'DiT-B/4':  DiT_B_4,   'DiT-B/8':  DiT_B_8,
     'DiT-S/2':  DiT_S_2,   'DiT-S/4':  DiT_S_4,   'DiT-S/8':  DiT_S_8,
 }
+
+
+#################################################################################
+#                        Diff-MoE: Sparse MoE DiT Model                        #
+#################################################################################
+
+from moe import DiTBlock_MoE
+
+
+class DiT_MoE(nn.Module):
+    """
+    Diffusion Transformer with Sparse Mixture-of-Experts blocks.
+
+    Identical to DiT except that selected blocks (specified by `moe_blocks`)
+    use DiTBlock_MoE (with routed experts + shared expert + timestep-conditioned
+    adaLN) instead of the standard DiTBlock with a dense MLP.
+
+    The forward signature is identical to DiT: (x, t, y) -> output.
+    """
+    def __init__(
+        self,
+        input_size=32,
+        patch_size=2,
+        in_channels=4,
+        hidden_size=1152,
+        depth=28,
+        num_heads=16,
+        mlp_ratio=4.0,
+        class_dropout_prob=0.1,
+        num_classes=1000,
+        learn_sigma=True,
+        # MoE-specific parameters
+        moe_blocks=None,        # list of block indices to use MoE (default: last 8)
+        num_experts=8,           # number of routed experts per MoE block
+        num_experts_per_tok=2,   # top-k experts selected per token
+        n_shared_experts=2,      # number of always-active shared experts
+        rank=64,                 # low-rank bottleneck dim for expert adaLN
+        use_dwconv=True,         # depthwise conv before MoE (from Diff-MoE paper)
+    ):
+        super().__init__()
+        self.learn_sigma = learn_sigma
+        self.in_channels = in_channels
+        self.out_channels = in_channels * 2 if learn_sigma else in_channels
+        self.patch_size = patch_size
+        self.num_heads = num_heads
+        self.hidden_size = hidden_size
+
+        self.x_embedder = PatchEmbed(input_size, patch_size, in_channels, hidden_size, bias=True)
+        self.t_embedder = TimestepEmbedder(hidden_size)
+        self.y_embedder = LabelEmbedder(num_classes, hidden_size, class_dropout_prob)
+        num_patches = self.x_embedder.num_patches
+        # Will use fixed sin-cos embedding:
+        self.pos_embed = nn.Parameter(torch.zeros(1, num_patches, hidden_size), requires_grad=False)
+
+        # Default: convert the last 8 blocks to MoE
+        if moe_blocks is None:
+            moe_blocks = list(range(max(0, depth - 8), depth))
+        self.moe_block_indices = set(moe_blocks)
+
+        # Build mixed block list: standard DiTBlock for most, DiTBlock_MoE for selected indices
+        blocks = []
+        for i in range(depth):
+            if i in self.moe_block_indices:
+                blocks.append(DiTBlock_MoE(
+                    hidden_size=hidden_size,
+                    num_heads=num_heads,
+                    attn_module=Attention(hidden_size, num_heads=num_heads, qkv_bias=True),
+                    mlp_ratio=mlp_ratio,
+                    num_experts=num_experts,
+                    num_experts_per_tok=num_experts_per_tok,
+                    n_shared_experts=n_shared_experts,
+                    rank=rank,
+                    use_dwconv=use_dwconv,
+                ))
+            else:
+                blocks.append(DiTBlock(hidden_size, num_heads, mlp_ratio=mlp_ratio))
+        self.blocks = nn.ModuleList(blocks)
+
+        self.final_layer = FinalLayer(hidden_size, patch_size, self.out_channels)
+        self.initialize_weights()
+
+    def initialize_weights(self):
+        # Initialize transformer layers:
+        def _basic_init(module):
+            if isinstance(module, nn.Linear):
+                torch.nn.init.xavier_uniform_(module.weight)
+                if module.bias is not None:
+                    nn.init.constant_(module.bias, 0)
+        self.apply(_basic_init)
+
+        # Initialize (and freeze) pos_embed by sin-cos embedding:
+        pos_embed = get_2d_sincos_pos_embed(self.pos_embed.shape[-1], int(self.x_embedder.num_patches ** 0.5))
+        self.pos_embed.data.copy_(torch.from_numpy(pos_embed).float().unsqueeze(0))
+
+        # Initialize patch_embed like nn.Linear (instead of nn.Conv2d):
+        w = self.x_embedder.proj.weight.data
+        nn.init.xavier_uniform_(w.view([w.shape[0], -1]))
+        nn.init.constant_(self.x_embedder.proj.bias, 0)
+
+        # Initialize label embedding table:
+        nn.init.normal_(self.y_embedder.embedding_table.weight, std=0.02)
+
+        # Initialize timestep embedding MLP:
+        nn.init.normal_(self.t_embedder.mlp[0].weight, std=0.02)
+        nn.init.normal_(self.t_embedder.mlp[2].weight, std=0.02)
+
+        # Zero-out adaLN modulation layers in all blocks:
+        for block in self.blocks:
+            nn.init.constant_(block.adaLN_modulation[-1].weight, 0)
+            nn.init.constant_(block.adaLN_modulation[-1].bias, 0)
+
+        # Zero-out output layers:
+        nn.init.constant_(self.final_layer.adaLN_modulation[-1].weight, 0)
+        nn.init.constant_(self.final_layer.adaLN_modulation[-1].bias, 0)
+        nn.init.constant_(self.final_layer.linear.weight, 0)
+        nn.init.constant_(self.final_layer.linear.bias, 0)
+
+    def unpatchify(self, x):
+        """
+        x: (N, T, patch_size**2 * C)
+        imgs: (N, H, W, C)
+        """
+        c = self.out_channels
+        p = self.x_embedder.patch_size[0]
+        h = w = int(x.shape[1] ** 0.5)
+        assert h * w == x.shape[1]
+
+        x = x.reshape(shape=(x.shape[0], h, w, p, p, c))
+        x = torch.einsum('nhwpqc->nchpwq', x)
+        imgs = x.reshape(shape=(x.shape[0], c, h * p, h * p))
+        return imgs
+
+    def forward(self, x, t, y):
+        """
+        Forward pass of DiT-MoE.
+        x: (N, C, H, W) tensor of spatial inputs (images or latent representations of images)
+        t: (N,) tensor of diffusion timesteps
+        y: (N,) tensor of class labels
+        """
+        x = self.x_embedder(x) + self.pos_embed  # (N, T, D), where T = H * W / patch_size ** 2
+        t = self.t_embedder(t)                   # (N, D)
+        y = self.y_embedder(y, self.training)    # (N, D)
+        c = t + y                                # (N, D)
+        for block in self.blocks:
+            x = block(x, c)                      # (N, T, D)
+        x = self.final_layer(x, c)                # (N, T, patch_size ** 2 * out_channels)
+        x = self.unpatchify(x)                   # (N, out_channels, H, W)
+        return x
+
+    def forward_with_cfg(self, x, t, y, cfg_scale):
+        """
+        Forward pass of DiT-MoE, but also batches the unconditional forward pass for classifier-free guidance.
+        """
+        # https://github.com/openai/glide-text2im/blob/main/notebooks/text2im.ipynb
+        half = x[: len(x) // 2]
+        combined = torch.cat([half, half], dim=0)
+        model_out = self.forward(combined, t, y)
+        # For exact reproducibility reasons, we apply classifier-free guidance on only
+        # three channels by default. The standard approach to cfg applies it to all channels.
+        # This can be done by uncommenting the following line and commenting-out the line following that.
+        # eps, rest = model_out[:, :self.in_channels], model_out[:, self.in_channels:]
+        eps, rest = model_out[:, :3], model_out[:, 3:]
+        cond_eps, uncond_eps = torch.split(eps, len(eps) // 2, dim=0)
+        half_eps = uncond_eps + cfg_scale * (cond_eps - uncond_eps)
+        eps = torch.cat([half_eps, half_eps], dim=0)
+        return torch.cat([eps, rest], dim=1)
+
+
+def load_pretrained_with_moe(model, pretrained_state_dict):
+    """
+    Load a vanilla DiT checkpoint into a DiT_MoE model.
+
+    For standard blocks: all weights load normally.
+    For MoE blocks: attention, norms, and adaLN weights load from pretrained;
+    MoE-specific params (gate, experts, shared expert, SE net) keep their
+    random initialization. The pretrained MLP weights for those blocks are
+    silently skipped.
+
+    Returns:
+        missing_keys: keys in the model but not in the checkpoint (MoE params)
+        unexpected_keys: keys in the checkpoint but not in the model (old MLP params)
+    """
+    result = model.load_state_dict(pretrained_state_dict, strict=False)
+
+    # Categorize for logging
+    moe_missing = [k for k in result.missing_keys if '.moe.' in k or '.dwconv.' in k]
+    other_missing = [k for k in result.missing_keys if k not in moe_missing]
+    mlp_unexpected = [k for k in result.unexpected_keys if '.mlp.' in k]
+    other_unexpected = [k for k in result.unexpected_keys if k not in mlp_unexpected]
+
+    print(f"\n{'='*60}")
+    print(f"Pretrained weight loading summary:")
+    print(f"{'='*60}")
+    print(f"  MoE params (randomly initialized): {len(moe_missing)}")
+    print(f"  Skipped pretrained MLP params:      {len(mlp_unexpected)}")
+    if other_missing:
+        print(f"  WARNING - other missing keys:       {len(other_missing)}")
+        for k in other_missing[:5]:
+            print(f"    {k}")
+    if other_unexpected:
+        print(f"  WARNING - other unexpected keys:    {len(other_unexpected)}")
+        for k in other_unexpected[:5]:
+            print(f"    {k}")
+    print(f"{'='*60}\n")
+
+    return result.missing_keys, result.unexpected_keys
+
+
+#################################################################################
+#                              DiT-MoE Configs                                  #
+#################################################################################
+
+def DiT_XL_2_MoE(**kwargs):
+    return DiT_MoE(depth=28, hidden_size=1152, patch_size=2, num_heads=16, **kwargs)
+
+def DiT_L_2_MoE(**kwargs):
+    return DiT_MoE(depth=24, hidden_size=1024, patch_size=2, num_heads=16, **kwargs)
+
+def DiT_B_2_MoE(**kwargs):
+    return DiT_MoE(depth=12, hidden_size=768, patch_size=2, num_heads=12, **kwargs)
+
+def DiT_S_2_MoE(**kwargs):
+    return DiT_MoE(depth=12, hidden_size=384, patch_size=2, num_heads=6, **kwargs)
+
+
+DiT_models['DiT-XL/2-MoE'] = DiT_XL_2_MoE
+DiT_models['DiT-L/2-MoE'] = DiT_L_2_MoE
+DiT_models['DiT-B/2-MoE'] = DiT_B_2_MoE
+DiT_models['DiT-S/2-MoE'] = DiT_S_2_MoE
+
