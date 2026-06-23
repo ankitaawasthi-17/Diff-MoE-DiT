@@ -26,3 +26,5 @@ finetune_moe_OLD_backup.py
 
 # Experiments scratch
 experiments/
+routing_analysis_finetuned_105k/
+sample_finetuned_105k.png
