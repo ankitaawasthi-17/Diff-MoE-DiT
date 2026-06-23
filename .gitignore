@@ -28,3 +28,6 @@ finetune_moe_OLD_backup.py
 experiments/
 routing_analysis_finetuned_105k/
 sample_finetuned_105k.png
+*.png
+routing_analysis_finetuned/
+torch/

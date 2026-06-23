@@ -1,0 +1,61 @@
+
+Building DiT-MoE model (MoE blocks: [24, 25, 26, 27])...
+Loading checkpoint: results-finetune/004-DiT-XL-2-MoE-finetune-moe24-27/checkpoints/0105000.pt
+  -> Finetuned checkpoint (trainable-only) at step=105000.
+     Step 1: Loading pretrained backbone from pretrained_models/DiT-XL-2-256x256.pt
+
+============================================================
+Pretrained weight loading summary:
+============================================================
+  MoE params (randomly initialized): 140
+  Skipped pretrained MLP params:      16
+============================================================
+
+     Step 2: Overlaying trained MoE weights (EMA).
+Installing routing hooks...
+  Hooks installed on 4 MoE blocks
+
+Running sampling (50 steps)...
+  Saved: sample_diffmoe_analyzed.png
+
+Generating visualizations in routing_analysis_105k/...
+  Saved: routing_analysis_105k/expert_utilization_heatmap.png
+  Saved: routing_analysis_105k/temporal_routing.png
+  Saved: routing_analysis_105k/router_entropy.png
+  Saved: routing_analysis_105k/spatial_routing.png
+
+======================================================================
+  ROUTING ANALYSIS SUMMARY
+======================================================================
+
+  Block 24:
+    Expert utilization: E0=24.7%, E1=25.4%, E2=25.0%, E3=24.9%
+    Most used expert:   E1 (25.4%)
+    Least used expert:  E0 (24.7%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.009 (0 = perfect balance)
+
+  Block 25:
+    Expert utilization: E0=25.6%, E1=25.2%, E2=24.7%, E3=24.6%
+    Most used expert:   E0 (25.6%)
+    Least used expert:  E3 (24.6%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.016 (0 = perfect balance)
+
+  Block 26:
+    Expert utilization: E0=24.9%, E1=24.7%, E2=24.9%, E3=25.5%
+    Most used expert:   E3 (25.5%)
+    Least used expert:  E1 (24.7%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.012 (0 = perfect balance)
+
+  Block 27:
+    Expert utilization: E0=24.9%, E1=25.6%, E2=24.2%, E3=25.3%
+    Most used expert:   E1 (25.6%)
+    Least used expert:  E2 (24.2%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.021 (0 = perfect balance)
+
+======================================================================
+
+Done! All plots saved to routing_analysis_105k/
