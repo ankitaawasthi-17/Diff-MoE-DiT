@@ -2,7 +2,7 @@
 pretrained_models/
 results-finetune/
 results/
-torch/
+torch
 
 # NFS junk files
 .nfs*
@@ -26,8 +26,7 @@ finetune_moe_OLD_backup.py
 
 # Experiments scratch
 experiments/
-routing_analysis_finetuned_105k/
-sample_finetuned_105k.png
-*.png
-routing_analysis_finetuned/
-torch/
+
+# Scratch/debug files
+shape_debug.py
+AA_Next command.txt
