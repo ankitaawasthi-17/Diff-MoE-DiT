@@ -1,0 +1,66 @@
+/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+  0%|          | 0/50 [00:00<?, ?it/s]
+  0%|          | 0/50 [00:00<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/analyze_routing.py", line 484, in <module>
+    main(args)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/analyze_routing.py", line 412, in main
+    samples = diffusion.p_sample_loop(
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/gaussian_diffusion.py", line 450, in p_sample_loop
+    for sample in self.p_sample_loop_progressive(
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/gaussian_diffusion.py", line 501, in p_sample_loop_progressive
+    out = self.p_sample(
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/gaussian_diffusion.py", line 402, in p_sample
+    out = self.p_mean_variance(
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/respace.py", line 92, in p_mean_variance
+    return super().p_mean_variance(self._wrap_model(model), *args, **kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/gaussian_diffusion.py", line 279, in p_mean_variance
+    model_output = model(x, t, **model_kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/diffusion/respace.py", line 129, in __call__
+    return self.model(x, new_ts, **kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/models.py", line 527, in forward_with_cfg
+    model_out = self.forward(combined, t, y)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/models.py", line 515, in forward
+    x = block(x, c)                      # (N, T, D)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/moe/dit_block_moe.py", line 103, in forward
+    x = shortcut + gate_mlp.unsqueeze(1) * self.moe(moe_input, c)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/moe/sparse_moe_block.py", line 134, in forward
+    topk_idx, topk_weight, aux_loss = self.gate(hidden_states)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1778, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1789, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/analyze_routing.py", line 59, in _hooked_forward
+    topk_idx, topk_weight, aux_loss = self.original_forward(hidden_states)
+  File "/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/moe/moe_gate.py", line 67, in forward
+    topk_weight, topk_idx = torch.topk(scores, k=self.top_k, dim=-1, sorted=False)
+RuntimeError: selected index k out of range
+ERROR conda.cli.main_run:execute(148): `conda run python analyze_routing.py --moe-blocks 24 25 26 27 --num-experts 1 --num-sampling-steps 50 --seed 42 --class-labels 207 360 387 974 88 979 417 279 --output-dir ablation_results/pretrained_1exp_mixed` failed. (See above for error)
+
+Building DiT-MoE model (MoE blocks: [24, 25, 26, 27])...
+Loading checkpoint: pretrained_models/DiT-XL-2-256x256.pt
+  -> Vanilla DiT checkpoint detected. Loading with load_pretrained_with_moe().
+
+============================================================
+Pretrained weight loading summary:
+============================================================
+  MoE params (randomly initialized): 68
+  Skipped pretrained MLP params:      16
+============================================================
+
+Installing routing hooks...
+  Hooks installed on 4 MoE blocks
+  Class labels: [207, 360, 387, 974, 88, 979, 417, 279]
+
+Running sampling (50 steps)...

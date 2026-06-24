@@ -1,0 +1,157 @@
+/home/min/a/awasthi9/miniconda3/envs/dit/lib/python3.10/site-packages/huggingface_hub/utils/_validators.py:205: UserWarning: The `local_dir_use_symlinks` argument is deprecated and ignored in `hf_hub_download`. Downloading to a local directory does not use symlinks anymore.
+  warnings.warn(
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+  0%|          | 0/50 [00:00<?, ?it/s]
+  2%|▏         | 1/50 [00:00<00:35,  1.37it/s]
+  4%|▍         | 2/50 [00:00<00:20,  2.40it/s]
+  6%|▌         | 3/50 [00:01<00:15,  3.13it/s]
+  8%|▊         | 4/50 [00:01<00:12,  3.67it/s]
+ 10%|█         | 5/50 [00:01<00:11,  4.05it/s]
+ 12%|█▏        | 6/50 [00:01<00:10,  4.29it/s]
+ 14%|█▍        | 7/50 [00:01<00:09,  4.48it/s]
+ 16%|█▌        | 8/50 [00:02<00:09,  4.60it/s]
+ 18%|█▊        | 9/50 [00:02<00:08,  4.69it/s]
+ 20%|██        | 10/50 [00:02<00:08,  4.76it/s]
+ 22%|██▏       | 11/50 [00:02<00:08,  4.82it/s]
+ 24%|██▍       | 12/50 [00:02<00:07,  4.87it/s]
+ 26%|██▌       | 13/50 [00:03<00:07,  4.90it/s]
+ 28%|██▊       | 14/50 [00:03<00:07,  4.90it/s]
+ 30%|███       | 15/50 [00:03<00:07,  4.88it/s]
+ 32%|███▏      | 16/50 [00:03<00:06,  4.89it/s]
+ 34%|███▍      | 17/50 [00:03<00:06,  4.91it/s]
+ 36%|███▌      | 18/50 [00:04<00:06,  4.93it/s]
+ 38%|███▊      | 19/50 [00:04<00:06,  4.95it/s]
+ 40%|████      | 20/50 [00:04<00:06,  4.95it/s]
+ 42%|████▏     | 21/50 [00:04<00:05,  4.92it/s]
+ 44%|████▍     | 22/50 [00:04<00:05,  4.90it/s]
+ 46%|████▌     | 23/50 [00:05<00:05,  4.90it/s]
+ 48%|████▊     | 24/50 [00:05<00:05,  4.92it/s]
+ 50%|█████     | 25/50 [00:05<00:05,  4.93it/s]
+ 52%|█████▏    | 26/50 [00:05<00:04,  4.92it/s]
+ 54%|█████▍    | 27/50 [00:06<00:04,  4.90it/s]
+ 56%|█████▌    | 28/50 [00:06<00:04,  4.90it/s]
+ 58%|█████▊    | 29/50 [00:06<00:04,  4.90it/s]
+ 60%|██████    | 30/50 [00:06<00:04,  4.91it/s]
+ 62%|██████▏   | 31/50 [00:06<00:03,  4.90it/s]
+ 64%|██████▍   | 32/50 [00:07<00:03,  4.90it/s]
+ 66%|██████▌   | 33/50 [00:07<00:03,  4.90it/s]
+ 68%|██████▊   | 34/50 [00:07<00:03,  4.90it/s]
+ 70%|███████   | 35/50 [00:07<00:03,  4.90it/s]
+ 72%|███████▏  | 36/50 [00:07<00:02,  4.89it/s]
+ 74%|███████▍  | 37/50 [00:08<00:02,  4.89it/s]
+ 76%|███████▌  | 38/50 [00:08<00:02,  4.89it/s]
+ 78%|███████▊  | 39/50 [00:08<00:02,  4.88it/s]
+ 80%|████████  | 40/50 [00:08<00:02,  4.88it/s]
+ 82%|████████▏ | 41/50 [00:08<00:01,  4.89it/s]
+ 84%|████████▍ | 42/50 [00:09<00:01,  4.90it/s]
+ 86%|████████▌ | 43/50 [00:09<00:01,  4.89it/s]
+ 88%|████████▊ | 44/50 [00:09<00:01,  4.88it/s]
+ 90%|█████████ | 45/50 [00:09<00:01,  4.89it/s]
+ 92%|█████████▏| 46/50 [00:09<00:00,  4.90it/s]
+ 94%|█████████▍| 47/50 [00:10<00:00,  4.91it/s]
+ 96%|█████████▌| 48/50 [00:10<00:00,  4.91it/s]
+ 98%|█████████▊| 49/50 [00:10<00:00,  4.91it/s]
+100%|██████████| 50/50 [00:10<00:00,  4.90it/s]
+100%|██████████| 50/50 [00:10<00:00,  4.67it/s]
+/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/analyze_routing.py:242: MatplotlibDeprecationWarning: The get_cmap function was deprecated in Matplotlib 3.7 and will be removed in 3.11. Use ``matplotlib.colormaps[name]`` or ``matplotlib.colormaps.get_cmap()`` or ``pyplot.get_cmap()`` instead.
+  cmap = plt.cm.get_cmap('tab10', num_experts)
+/home/nano01/a/awasthi9/Research/Diffusion_MoE/CD_MOE/DiT/analyze_routing.py:268: UserWarning: This figure includes Axes that are not compatible with tight_layout, so results might be incorrect.
+  plt.tight_layout()
+
+Building DiT-MoE model (MoE blocks: [24, 25, 26, 27])...
+Loading checkpoint: results-finetune/004-DiT-XL-2-MoE-finetune-moe24-27/checkpoints/0115000.pt
+  -> Finetuned checkpoint (trainable-only) at step=115000.
+     Step 1: Loading pretrained backbone from pretrained_models/DiT-XL-2-256x256.pt
+
+============================================================
+Pretrained weight loading summary:
+============================================================
+  MoE params (randomly initialized): 140
+  Skipped pretrained MLP params:      16
+============================================================
+
+     Step 2: Overlaying trained MoE weights (EMA).
+Installing routing hooks...
+  Hooks installed on 4 MoE blocks
+  Class labels: [207, 360, 387, 281, 388, 340, 330, 386]
+
+Running sampling (50 steps)...
+  Saved: sample_diffmoe_analyzed.png
+
+Generating visualizations in ablation_results/finetuned_4exp_single/...
+  Saved: ablation_results/finetuned_4exp_single/expert_utilization_heatmap.png
+  Saved: ablation_results/finetuned_4exp_single/temporal_routing.png
+  Saved: ablation_results/finetuned_4exp_single/router_entropy.png
+  Saved: ablation_results/finetuned_4exp_single/spatial_routing.png
+
+======================================================================
+  ROUTING ANALYSIS SUMMARY
+======================================================================
+
+  Block 24:
+    Expert utilization: E0=24.6%, E1=25.2%, E2=24.5%, E3=25.7%
+    Most used expert:   E3 (25.7%)
+    Least used expert:  E2 (24.5%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.020 (0 = perfect balance)
+
+  Block 25:
+    Expert utilization: E0=26.1%, E1=25.1%, E2=24.4%, E3=24.4%
+    Most used expert:   E0 (26.1%)
+    Least used expert:  E3 (24.4%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.028 (0 = perfect balance)
+
+  Block 26:
+    Expert utilization: E0=23.9%, E1=26.3%, E2=25.3%, E3=24.5%
+    Most used expert:   E1 (26.3%)
+    Least used expert:  E0 (23.9%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.036 (0 = perfect balance)
+
+  Block 27:
+    Expert utilization: E0=24.7%, E1=28.4%, E2=23.2%, E3=23.6%
+    Most used expert:   E1 (28.4%)
+    Least used expert:  E2 (23.2%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.082 (0 = perfect balance)
+
+======================================================================
+
+======================================================================
+  ROUTING ANALYSIS SUMMARY
+======================================================================
+
+  Block 24:
+    Expert utilization: E0=24.6%, E1=25.2%, E2=24.5%, E3=25.7%
+    Most used expert:   E3 (25.7%)
+    Least used expert:  E2 (24.5%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.020 (0 = perfect balance)
+
+  Block 25:
+    Expert utilization: E0=26.1%, E1=25.1%, E2=24.4%, E3=24.4%
+    Most used expert:   E0 (26.1%)
+    Least used expert:  E3 (24.4%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.028 (0 = perfect balance)
+
+  Block 26:
+    Expert utilization: E0=23.9%, E1=26.3%, E2=25.3%, E3=24.5%
+    Most used expert:   E1 (26.3%)
+    Least used expert:  E0 (23.9%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.036 (0 = perfect balance)
+
+  Block 27:
+    Expert utilization: E0=24.7%, E1=28.4%, E2=23.2%, E3=23.6%
+    Most used expert:   E1 (28.4%)
+    Least used expert:  E2 (23.2%)
+    Avg router entropy: 1.386 / 1.386 (100.0% of max)
+    Load balance CV:    0.082 (0 = perfect balance)
+
+======================================================================
+  Saved stats: ablation_results/finetuned_4exp_single/routing_stats.json
+
+Done! All plots saved to ablation_results/finetuned_4exp_single/

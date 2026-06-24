@@ -34,6 +34,7 @@ from diffusers.models import AutoencoderKL
 from download import find_model
 from models import DiT_models, load_pretrained_with_moe
 import argparse
+import json
 import os
 
 
@@ -308,7 +309,32 @@ def print_summary_stats(hooks, num_experts):
 
     print(f"\n{'='*70}")
 
-
+def save_stats_json(hooks, num_experts, out_dir):
+    """Save routing statistics to JSON for ablation_compare.py to load."""
+    stats = {"utilization": {}, "entropy": {}, "cv": {}}
+    for hook in hooks:
+        counts = np.zeros(num_experts)
+        total = 0
+        all_probs = []
+        for data in hook.routing_data:
+            idx = data['topk_idx'].numpy().flatten()
+            for e in range(num_experts):
+                counts[e] += (idx == e).sum()
+            total += len(idx)
+            all_probs.append(data['probs'].numpy())
+        fracs = counts / max(total, 1)
+        all_probs = np.concatenate(all_probs, axis=0)
+        eps = 1e-10
+        avg_entropy = -np.sum(all_probs * np.log(all_probs + eps), axis=-1).mean()
+        cv = float(np.std(fracs) / max(np.mean(fracs), eps))
+        b = hook.block_idx
+        stats["utilization"][b] = {e: float(fracs[e]) for e in range(num_experts)}
+        stats["entropy"][b] = float(avg_entropy)
+        stats["cv"][b] = cv
+    path = os.path.join(out_dir, "routing_stats.json")
+    with open(path, "w") as f:
+        json.dump(stats, f, indent=2)
+    print(f"  Saved stats: {path}")
 def main(args):
     torch.manual_seed(args.seed)
     torch.set_grad_enabled(False)
@@ -331,7 +357,7 @@ def main(args):
     ).to(device)
 
     # Load pretrained weights
-    ckpt_path = args.ckpt or f"DiT-XL-2-{args.image_size}x{args.image_size}.pt"
+    ckpt_path = args.ckpt or f"pretrained_models/DiT-XL-2-{args.image_size}x{args.image_size}.pt"
     print(f"Loading checkpoint: {ckpt_path}")
     raw = torch.load(ckpt_path, map_location="cpu", weights_only=False)
     # Handle both formats:
@@ -369,7 +395,8 @@ def main(args):
     vae = AutoencoderKL.from_pretrained(f"stabilityai/sd-vae-ft-{args.vae}").to(device)
 
     # Sampling setup
-    class_labels = [207, 360, 387, 974, 88, 979, 417, 279]
+    class_labels = args.class_labels
+    print(f"  Class labels: {class_labels}")
     n = len(class_labels)
     z = torch.randn(n, 4, latent_size, latent_size, device=device)
     y = torch.tensor(class_labels, device=device)
@@ -419,6 +446,8 @@ def main(args):
 
     # Print text summary
     print_summary_stats(hooks, num_experts)
+    print_summary_stats(hooks, num_experts)
+    save_stats_json(hooks, num_experts, out_dir)
 
     # Restore original forward methods
     for hook in hooks:
@@ -446,6 +475,10 @@ if __name__ == "__main__":
     parser.add_argument("--n-shared-experts", type=int, default=2)
     parser.add_argument("--rank", type=int, default=64)
     parser.add_argument("--no-dwconv", action="store_true")
+    parser.add_argument("--class-labels", type=int, nargs="+",
+                        default=[207, 360, 387, 974, 88, 979, 417, 279],
+                        help="ImageNet class labels to sample. Default: mixed categories. "
+                             "Example for animals only: --class-labels 207 360 387 281 388 340 330 386")
 
     args = parser.parse_args()
     main(args)
