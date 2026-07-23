@@ -30,3 +30,19 @@ experiments/
 # Scratch/debug files
 shape_debug.py
 AA_Next command.txt
+
+# CD-MoE training results (checkpoints are huge)
+results-cdmoe/
+results-cdmoe-full/
+grid_search_results/
+
+# Generated images & FID data
+fid_baseline/
+fid_cdmoe_v2/
+samples_baseline/
+samples_cdmoe_v2/
+
+# Training logs (keep scripts, not logs)
+training_*.log
+grid_search_*.log
+fid_*.log

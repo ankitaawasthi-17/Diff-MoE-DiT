@@ -1,0 +1,372 @@
+{
+  "class_labels": [
+    207,
+    360,
+    387,
+    974,
+    88,
+    979,
+    417,
+    279
+  ],
+  "class_names": [
+    "Golden Retriever",
+    "Otter",
+    "Red Panda",
+    "Geyser",
+    "Macaw",
+    "Valley",
+    "Balloon",
+    "Arctic Fox"
+  ],
+  "num_experts": 4,
+  "cdmoe_mode": "loss_only",
+  "cdmoe_steps": 80072,
+  "base_ckpt": "results-finetune/004-DiT-XL-2-MoE-finetune-moe24-27/checkpoints/0115000.pt",
+  "block_24": {
+    "Golden Retriever": {
+      "E0": "0.252",
+      "E1": "0.224",
+      "E2": "0.247",
+      "E3": "0.277"
+    },
+    "Otter": {
+      "E0": "0.222",
+      "E1": "0.205",
+      "E2": "0.258",
+      "E3": "0.315"
+    },
+    "Red Panda": {
+      "E0": "0.212",
+      "E1": "0.265",
+      "E2": "0.206",
+      "E3": "0.316"
+    },
+    "Geyser": {
+      "E0": "0.259",
+      "E1": "0.213",
+      "E2": "0.268",
+      "E3": "0.260"
+    },
+    "Macaw": {
+      "E0": "0.259",
+      "E1": "0.226",
+      "E2": "0.211",
+      "E3": "0.304"
+    },
+    "Valley": {
+      "E0": "0.245",
+      "E1": "0.194",
+      "E2": "0.242",
+      "E3": "0.319"
+    },
+    "Balloon": {
+      "E0": "0.258",
+      "E1": "0.229",
+      "E2": "0.242",
+      "E3": "0.272"
+    },
+    "Arctic Fox": {
+      "E0": "0.250",
+      "E1": "0.237",
+      "E2": "0.223",
+      "E3": "0.290"
+    }
+  },
+  "block_25": {
+    "Golden Retriever": {
+      "E0": "0.266",
+      "E1": "0.262",
+      "E2": "0.248",
+      "E3": "0.223"
+    },
+    "Otter": {
+      "E0": "0.278",
+      "E1": "0.280",
+      "E2": "0.246",
+      "E3": "0.196"
+    },
+    "Red Panda": {
+      "E0": "0.231",
+      "E1": "0.248",
+      "E2": "0.285",
+      "E3": "0.235"
+    },
+    "Geyser": {
+      "E0": "0.223",
+      "E1": "0.290",
+      "E2": "0.278",
+      "E3": "0.209"
+    },
+    "Macaw": {
+      "E0": "0.257",
+      "E1": "0.283",
+      "E2": "0.229",
+      "E3": "0.231"
+    },
+    "Valley": {
+      "E0": "0.255",
+      "E1": "0.324",
+      "E2": "0.229",
+      "E3": "0.192"
+    },
+    "Balloon": {
+      "E0": "0.266",
+      "E1": "0.249",
+      "E2": "0.245",
+      "E3": "0.240"
+    },
+    "Arctic Fox": {
+      "E0": "0.252",
+      "E1": "0.245",
+      "E2": "0.263",
+      "E3": "0.240"
+    }
+  },
+  "block_26": {
+    "Golden Retriever": {
+      "E0": "0.112",
+      "E1": "0.243",
+      "E2": "0.269",
+      "E3": "0.375"
+    },
+    "Otter": {
+      "E0": "0.120",
+      "E1": "0.250",
+      "E2": "0.225",
+      "E3": "0.405"
+    },
+    "Red Panda": {
+      "E0": "0.118",
+      "E1": "0.293",
+      "E2": "0.190",
+      "E3": "0.399"
+    },
+    "Geyser": {
+      "E0": "0.100",
+      "E1": "0.249",
+      "E2": "0.240",
+      "E3": "0.411"
+    },
+    "Macaw": {
+      "E0": "0.122",
+      "E1": "0.280",
+      "E2": "0.236",
+      "E3": "0.362"
+    },
+    "Valley": {
+      "E0": "0.138",
+      "E1": "0.249",
+      "E2": "0.221",
+      "E3": "0.392"
+    },
+    "Balloon": {
+      "E0": "0.126",
+      "E1": "0.252",
+      "E2": "0.257",
+      "E3": "0.365"
+    },
+    "Arctic Fox": {
+      "E0": "0.115",
+      "E1": "0.249",
+      "E2": "0.250",
+      "E3": "0.386"
+    }
+  },
+  "block_27": {
+    "Golden Retriever": {
+      "E0": "0.269",
+      "E1": "0.273",
+      "E2": "0.221",
+      "E3": "0.238"
+    },
+    "Otter": {
+      "E0": "0.252",
+      "E1": "0.264",
+      "E2": "0.239",
+      "E3": "0.245"
+    },
+    "Red Panda": {
+      "E0": "0.255",
+      "E1": "0.274",
+      "E2": "0.238",
+      "E3": "0.234"
+    },
+    "Geyser": {
+      "E0": "0.290",
+      "E1": "0.242",
+      "E2": "0.223",
+      "E3": "0.244"
+    },
+    "Macaw": {
+      "E0": "0.264",
+      "E1": "0.229",
+      "E2": "0.226",
+      "E3": "0.280"
+    },
+    "Valley": {
+      "E0": "0.231",
+      "E1": "0.303",
+      "E2": "0.212",
+      "E3": "0.254"
+    },
+    "Balloon": {
+      "E0": "0.245",
+      "E1": "0.268",
+      "E2": "0.246",
+      "E3": "0.241"
+    },
+    "Arctic Fox": {
+      "E0": "0.252",
+      "E1": "0.248",
+      "E2": "0.273",
+      "E3": "0.227"
+    }
+  },
+  "dominant_experts": {
+    "Golden Retriever": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.277"
+      },
+      "block_25": {
+        "dominant": 0,
+        "fraction": "0.266"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.375"
+      },
+      "block_27": {
+        "dominant": 1,
+        "fraction": "0.273"
+      }
+    },
+    "Otter": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.315"
+      },
+      "block_25": {
+        "dominant": 1,
+        "fraction": "0.280"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.405"
+      },
+      "block_27": {
+        "dominant": 1,
+        "fraction": "0.264"
+      }
+    },
+    "Red Panda": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.316"
+      },
+      "block_25": {
+        "dominant": 2,
+        "fraction": "0.285"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.399"
+      },
+      "block_27": {
+        "dominant": 1,
+        "fraction": "0.274"
+      }
+    },
+    "Geyser": {
+      "block_24": {
+        "dominant": 2,
+        "fraction": "0.268"
+      },
+      "block_25": {
+        "dominant": 1,
+        "fraction": "0.290"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.411"
+      },
+      "block_27": {
+        "dominant": 0,
+        "fraction": "0.290"
+      }
+    },
+    "Macaw": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.304"
+      },
+      "block_25": {
+        "dominant": 1,
+        "fraction": "0.283"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.362"
+      },
+      "block_27": {
+        "dominant": 3,
+        "fraction": "0.280"
+      }
+    },
+    "Valley": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.319"
+      },
+      "block_25": {
+        "dominant": 1,
+        "fraction": "0.324"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.392"
+      },
+      "block_27": {
+        "dominant": 1,
+        "fraction": "0.303"
+      }
+    },
+    "Balloon": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.272"
+      },
+      "block_25": {
+        "dominant": 0,
+        "fraction": "0.266"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.365"
+      },
+      "block_27": {
+        "dominant": 1,
+        "fraction": "0.268"
+      }
+    },
+    "Arctic Fox": {
+      "block_24": {
+        "dominant": 3,
+        "fraction": "0.290"
+      },
+      "block_25": {
+        "dominant": 2,
+        "fraction": "0.263"
+      },
+      "block_26": {
+        "dominant": 3,
+        "fraction": "0.386"
+      },
+      "block_27": {
+        "dominant": 2,
+        "fraction": "0.273"
+      }
+    }
+  }
+}
